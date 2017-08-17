@@ -48,7 +48,7 @@ public class TopLevelActivity extends Activity {
             db = starbuzzDatabaseHelper.getReadableDatabase();
             //Создать курсор, содержащий значения столбцов _id и name для записей которых favorite = 1
             favoritesCursor = db.query("DRINK", new String[]{"_id", "NAME"}, "FAVORITE = 1",
-                    null, null, null, null, null);
+                    null, null, null, null);
             //вывести названия напитков в ListView
             CursorAdapter favoriteAdapter = new SimpleCursorAdapter(TopLevelActivity.this,
                     android.R.layout.simple_list_item_1, favoritesCursor,
@@ -81,5 +81,28 @@ public class TopLevelActivity extends Activity {
         super.onDestroy();
         favoritesCursor.close();
         db.close();
+    }
+
+    //Метод  вызываеться при возвращении пользователя к ТОп
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        try{
+            SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(this);
+            db = starbuzzDatabaseHelper.getReadableDatabase();
+            Cursor newCursor = db.query("DRINK", new String[]{"_id", "NAME"}, "FAVORITE = 1",
+                    null, null, null, null);
+            ListView listFavorite = (ListView) findViewById(R.id.list_favorites);
+            //Получить адаптер спискового представления
+            CursorAdapter adapter = (CursorAdapter) listFavorite.getAdapter();
+            //Заменить курсор, используемый адаптером, на новый
+            adapter.changeCursor(newCursor);
+            favoritesCursor = newCursor;
+
+        }catch (SQLiteException e){
+            Toast toast = Toast.makeText(this, "Database is unavalieble", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
     }
 }
