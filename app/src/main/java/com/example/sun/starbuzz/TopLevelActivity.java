@@ -1,14 +1,18 @@
 package com.example.sun.starbuzz;
 
 import android.app.Activity;
+import android.app.VoiceInteractor;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -85,8 +89,9 @@ public class TopLevelActivity extends Activity {
 
     //Метод  вызываеться при возвращении пользователя к ТОп
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
+      //  new RestartTask().execute(favoritesCursor);
         try{
             SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(this);
             db = starbuzzDatabaseHelper.getReadableDatabase();
@@ -105,4 +110,43 @@ public class TopLevelActivity extends Activity {
         }
 
     }
+
+
+//    //Внутренний класс для обновления напитка.AsyncTask добавляется в активность в виде внутреннего класса.
+//    private class RestartTask extends AsyncTask<Cursor, Void, Boolean> {
+//        Cursor newCursor;
+//        CursorAdapter adapter;
+//        ListView listFavorite;
+//
+//        protected void onPreExecute() {
+//            listFavorite = (ListView) findViewById(R.id.list_favorites);
+//            //Получить адаптер спискового представления
+//            adapter = (CursorAdapter) listFavorite.getAdapter();
+//
+//        }
+//
+//        protected Boolean doInBackground(Cursor... param) {
+//            try {
+//                SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(TopLevelActivity.this);
+//                db = starbuzzDatabaseHelper.getReadableDatabase();
+//
+//                newCursor = db.query("DRINK", new String[]{"_id", "NAME"}, "FAVORITE = 1",
+//                        null, null, null, null);
+//                //Заменить курсор, используемый адаптером, на новый
+//                adapter.changeCursor(newCursor);
+//                param[0] = newCursor;
+//                return true;
+//            } catch (SQLiteException e) {
+//                return false;
+//            }
+//        }
+//
+//        protected void onPostExecute(Boolean success) {
+//            if (!success) {
+//                Toast toast = Toast.makeText(TopLevelActivity.this, "Database is unavaliable", Toast.LENGTH_SHORT);
+//                toast.show();
+//            }
+//        }
+//    }
+
 }
