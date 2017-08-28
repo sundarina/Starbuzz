@@ -6,9 +6,6 @@ import android.content.pm.ProviderInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by sun on 15.08.17.
- */
 
 public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
 
